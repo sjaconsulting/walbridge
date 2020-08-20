@@ -1,0 +1,9 @@
+name = "walbridge"
+type = "webpack"
+account_id = "8e31b6ab5051881152cb5c1fbcf52030"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[site]
+bucket = "./public"
