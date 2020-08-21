@@ -26,6 +26,8 @@ addEventListener('fetch', event => {
 
 async function handleEvent(event) {
   const url = new URL(event.request.url)
+  const accept = event.request.headers.get('accept')
+  console.log(url.pathname)
   let options = {}
 
   /**
@@ -41,20 +43,26 @@ async function handleEvent(event) {
         bypassCache: true,
       }
     }
+    if (event.request.method === 'GET' &&
+    url.pathname.startsWith('/api.nvseismolab.org/')) {
+ 
+      // Proxy the webcam image file requests
+      return proxyRequest('http:/' + url.pathname, event.request);
+ 
+    } else {
+      const page = await getAssetFromKV(event, options)
 
-    const page = await getAssetFromKV(event, options)
+      // allow headers to be altered
+      const response = new Response(page.body, page)
 
-    // allow headers to be altered
-    const response = new Response(page.body, page)
+      response.headers.set('X-XSS-Protection', '1; mode=block')
+      response.headers.set('X-Content-Type-Options', 'nosniff')
+      response.headers.set('X-Frame-Options', 'DENY')
+      response.headers.set('Referrer-Policy', 'unsafe-url')
+      response.headers.set('Feature-Policy', 'none')
 
-    response.headers.set('X-XSS-Protection', '1; mode=block')
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('X-Frame-Options', 'DENY')
-    response.headers.set('Referrer-Policy', 'unsafe-url')
-    response.headers.set('Feature-Policy', 'none')
-
-    return response
-
+      return response
+    }
   } catch (e) {
     // if an error is thrown try to serve the asset at 404.html
     if (!DEBUG) {
@@ -91,3 +99,59 @@ function handlePrefix(prefix) {
     return new Request(url.toString(), defaultAssetKey)
   }
 }
+
+async function proxyRequest(url, request) {
+ 
+  // Only pass through a subset of request headers
+  let init = {
+    method: request.method,
+    headers: {},
+    cf: {      
+      // Always cache this fetch regardless of content type
+      // for a max of 5 minutes before revalidating the resource     
+      cacheEverything: true,  
+      cacheTtlByStatus: { "200-299": 300, 404: 1, "500-599": 0 }
+    },
+  };
+  const proxyHeaders = ["Accept",
+                        "Accept-Encoding",
+                        "Accept-Language",
+                        "Referer",
+                        "User-Agent"];
+  for (let name of proxyHeaders) {
+    let value = request.headers.get(name);
+    if (value) {
+      init.headers[name] = value;
+    }
+  }
+  const clientAddr = request.headers.get('cf-connecting-ip');
+  if (clientAddr) {
+    init.headers['X-Forwarded-For'] = clientAddr;
+  }
+  
+  // Only include a strict subset of response headers
+  const response = await fetch(url, init);
+  if (response) {
+    const responseHeaders = ["Content-Type",
+                             "Cache-Control",
+                             "Expires",
+                             "Accept-Ranges",
+                             "Date",
+                             "Last-Modified",
+                             "ETag"];
+    let responseInit = {status: response.status,
+                        statusText: response.statusText,
+                        headers: { "Cache-Control": "public, max-age=300" }};
+    for (let name of responseHeaders) {
+      let value = response.headers.get(name);
+      if (value) {
+        responseInit.headers[name] = value;
+      }
+    }
+    const newResponse = new Response(response.body, responseInit);
+    return newResponse;
+  }
+  
+  return response;
+ }
+ 
