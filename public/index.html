@@ -2,21 +2,45 @@
 <html>
     <head>
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Gravitas One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
         <style>
             h1 {
-                font-family: Pacifico, sans-serif;
+                font-family: Gravitas One, sans-serif;
                 font-size: 4em;
                 color: #3eb5f1;
                 margin: 0;
+                text-align: center;
             }
-
             h2 {
                 font-weight: 300;
                 font-family: sans-serif;
             }
-
+            p {
+                font-family: 'Lato';
+                font-size: 1em;
+            }
+            section {
+                display: flex;
+                flex-flow: row wrap;
+                align-items: center;
+                justify-content: space-around;
+            }
+            figure {
+                border: thin silver solid;
+                flex: 320px;
+                padding: 0;
+            }
+            figcaption {
+                font-family: 'Lato';
+                padding: 0.5em;
+                border: thin silver solid;
+                border-bottom: none;
+            }
+            img.scaled {
+                width: 100%;
+            }
             .centered {
                 position: fixed;
                 top: 50%;
@@ -24,60 +48,61 @@
                 transform: translate(-50%, -50%);
                 text-align: center;
             }
-
             #ferris {
                 width: 75%;
             }
         </style>
     </head>
     <body>
-        <h1>Walbridge Fire Cams</h1>
-        <div>
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Jackson" alt="webcam" width="600" border="0" />
-            <figcaption>Mount Jackson</figcaption>
-        </figure>
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Jackson2" alt="webcam" width="600" border="0" />
-            <figcaption>Mount Jackson 2</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-PoleMt" alt="webcam" width="600" border="0" />
-            <figcaption>Pole Mountain</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-PoleMt2" alt="webcam" width="600" border="0" />
-            <figcaption>Pole Mountain 2</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Rockpile" alt="webcam" width="600" border="0" />
-            <figcaption>Rockpile</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-MohrhardtRidge1" alt="webcam" width="600" border="0" />
-            <figcaption>Mohrhardt Ridge</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-MohrhardtRidge2" alt="webcam" width="600" border="0" />
-            <figcaption>Mohrhardt Ridge 2</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-HighHill" alt="webcam" width="600" border="0" />
-            <figcaption>Pepperwood West (High Hill)</figcaption>
-        </figure> 
-        <figure>
-            <img id="webcam" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Geyser" alt="webcam" width="600" border="0" />
-            <figcaption>Geyser Peak</figcaption>
-        </figure>  
-        <figure>
-            <img id="webcam" title="Webcam" src="https://icons.wunderground.com/webcamramdisk/3/p/3phase/4/current.jpg" alt="Jackson" width="600" border="0" />
-            <figcaption>Healdsburg (Wunderground - 3phaseCAM4)</figcaption>
-        </figure>
-      </div>
-      <div>
-          <p>
-              <a href="https://sonomacounty.maps.arcgis.com/apps/webappviewer/index.html?id=69a0e54e9e2b48c086d122027b21c961&fbclid=IwAR2BhZkRcacEhwB-Xu0AVWmOT3Pac2ByxV3UqWnrpt5M773geQsakNhQ2rs">Sonoma County ArcGIS</a>
-            </p>
-        </div>
+        <header>
+            <h1>Walbridge Fire Cams</h1>
+        </header>
+        <section>
+            <figure>
+                <img class=scaled id="mtjackson" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Jackson" alt="webcam" />
+                <figcaption>Mount Jackson</figcaption>
+            </figure>
+            <figure>
+                <img class=scaled id="mtjackson2" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Jackson2" alt="webcam" />
+                <figcaption>Mount Jackson 2</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="polemountain" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-PoleMt" alt="webcam" />
+                <figcaption>Pole Mountain</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="polemountain2" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-PoleMt2" alt="webcam" />
+                <figcaption>Pole Mountain 2</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="rockpile" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Rockpile" alt="webcam" />
+                <figcaption>Rockpile</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="mohrhardt" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-MohrhardtRidge1" alt="webcam" />
+                <figcaption>Mohrhardt Ridge</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="mohrhardt2" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-MohrhardtRidge2" alt="webcam" />
+                <figcaption>Mohrhardt Ridge 2</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="pepperwood" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-HighHill" alt="webcam" />
+                <figcaption>Pepperwood West (High Hill)</figcaption>
+            </figure> 
+            <figure>
+                <img class=scaled id="geyserpeak" title="Webcam" src="http://api.nvseismolab.org/camera/Axis-Geyser" alt="webcam" />
+                <figcaption>Geyser Peak</figcaption>
+            </figure>  
+            <figure>
+                <img class=scaled id="healdsburg" title="Webcam" src="https://icons.wunderground.com/webcamramdisk/3/p/3phase/4/current.jpg" alt="Jackson" />
+                <figcaption>Healdsburg (Wunderground - 3phaseCAM4)</figcaption>
+            </figure>
+        </section>
+        <footer>
+            <p><a href="https://sonomacounty.maps.arcgis.com/apps/webappviewer/index.html?id=69a0e54e9e2b48c086d122027b21c961&fbclid=IwAR2BhZkRcacEhwB-Xu0AVWmOT3Pac2ByxV3UqWnrpt5M773geQsakNhQ2rs">Sonoma County ArcGIS Map</a></p>
+            <p><a href="https://github.com/sjaconsulting/walbridge">Site Code</a> - Contributions Welcome!</p>
+            <p><a href="https://www.sjaconsulting.com/">SJA Consulting</a></p>
+        </footer>
     </body>
 </html>
