@@ -34,7 +34,7 @@ async function handleEvent(event) {
    * You can add custom logic to how we fetch your assets
    * by configuring the function `mapRequestToAsset`
    */
-  // options.mapRequestToAsset = handlePrefix(/^\/docs/)
+  //options.mapRequestToAsset = handlePrefix(/^\/docs/)
 
   try {
     if (DEBUG) {
@@ -106,12 +106,12 @@ async function proxyRequest(url, request) {
   let init = {
     method: request.method,
     headers: {},
-    cf: {      
+    /*cf: {      
       // Always cache this fetch regardless of content type
       // for a max of 5 minutes before revalidating the resource     
       cacheEverything: true,  
       cacheTtlByStatus: { "200-299": 300, 404: 1, "500-599": 0 }
-    },
+    },*/
   };
   const proxyHeaders = ["Accept",
                         "Accept-Encoding",
