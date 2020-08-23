@@ -47,7 +47,8 @@ async function handleEvent(event) {
     url.pathname.startsWith('/api.nvseismolab.org/')) {
  
       // Proxy the webcam image file requests
-      return proxyRequest('http:/' + url.pathname, event.request);
+      const imageURL = 'http:/' + url.pathname.split(".jpg")[0].trim()
+      return proxyRequest(imageURL, event.request);
  
     } else {
       const page = await getAssetFromKV(event, options)
@@ -101,17 +102,19 @@ function handlePrefix(prefix) {
 }
 
 async function proxyRequest(url, request) {
- 
   // Only pass through a subset of request headers
+  console.log(url)
+  console.log(request.url.toString())
   let init = {
     method: request.method,
     headers: {},
-    /*cf: {      
+    cf: {      
       // Always cache this fetch regardless of content type
       // for a max of 5 minutes before revalidating the resource     
-      cacheEverything: true,  
-      cacheTtlByStatus: { "200-299": 300, 404: 1, "500-599": 0 }
-    },*/
+      //cacheEverything: true,
+      //cacheKey: request.url.toString(),
+      cacheTtlByStatus: { "200-299": 0, 404: 1, "500-599": -1 }
+    },
   };
   const proxyHeaders = ["Accept",
                         "Accept-Encoding",
@@ -130,28 +133,29 @@ async function proxyRequest(url, request) {
   }
   
   // Only include a strict subset of response headers
-  const response = await fetch(url, init);
-  if (response) {
-    const responseHeaders = ["Content-Type",
-                             "Cache-Control",
-                             "Expires",
-                             "Accept-Ranges",
-                             "Date",
-                             "Last-Modified",
-                             "ETag"];
-    let responseInit = {status: response.status,
-                        statusText: response.statusText,
-                        headers: { "Cache-Control": "public, max-age=300" }};
-    for (let name of responseHeaders) {
-      let value = response.headers.get(name);
-      if (value) {
-        responseInit.headers[name] = value;
+  try {
+    const response = await fetch(url, init);
+    if (response) {
+      const responseHeaders = ["Content-Type",
+                              "Cache-Control",
+                              "Expires",
+                              "Accept-Ranges",
+                              "Date",
+                              "Last-Modified",
+                              "ETag"];
+      let responseInit = {status: response.status,
+                          statusText: response.statusText,
+                          headers: { "Cache-Control": "public, max-age=5" }};
+      for (let name of responseHeaders) {
+        let value = response.headers.get(name);
+        if (value) {
+          responseInit.headers[name] = value;
+        }
       }
+      const newResponse = new Response(response.body, responseInit);
+      return newResponse; 
     }
-    const newResponse = new Response(response.body, responseInit);
-    return newResponse;
+  } catch (e) {
+    return new Response(e.message || e.toString(), { status: 500 })
   }
-  
-  return response;
- }
- 
+}
