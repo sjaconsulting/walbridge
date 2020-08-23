@@ -27,7 +27,6 @@ addEventListener('fetch', event => {
 async function handleEvent(event) {
   const url = new URL(event.request.url)
   const accept = event.request.headers.get('accept')
-  console.log(url.pathname)
   let options = {}
 
   /**
@@ -47,8 +46,8 @@ async function handleEvent(event) {
     url.pathname.startsWith('/api.nvseismolab.org/')) {
  
       // Proxy the webcam image file requests
-      const imageURL = 'http:/' + url.pathname.split(".jpg")[0].trim()
-      return proxyRequest(imageURL, event.request);
+      const imagePathname = 'http:/' + url.pathname.split(".jpg")[0].trim()
+      return proxyRequest(imagePathname, event.request);
  
     } else {
       const page = await getAssetFromKV(event, options)
@@ -101,19 +100,34 @@ function handlePrefix(prefix) {
   }
 }
 
+/**
+ * Based off Fast Google Fonts by @pmeenan
+ * Code: https://github.com/cloudflare/worker-examples/blob/master/examples/fast-google-fonts/fast-google-fonts.js
+ * Blog post: https://blog.cloudflare.com/fast-google-fonts-with-cloudflare-workers/
+ * Generate a new request based on the original. Filter the request
+ * headers to prevent leaking user data (cookies, etc) and filter
+ * the response headers to prevent the origin setting policy on
+ * our origin.
+ * 
+ * @param {*} url The URL to proxy
+ * @param {*} request The original request (to copy parameters from)
+ */
+
+
 async function proxyRequest(url, request) {
   // Only pass through a subset of request headers
-  console.log(url)
-  console.log(request.url.toString())
   let init = {
     method: request.method,
     headers: {},
     cf: {      
       // Always cache this fetch regardless of content type
-      // for a max of 5 minutes before revalidating the resource     
+      // for a max of 30 seconds before revalidating the resource
+      cacheTtl: 30
+      // Enterprise-only cache features available for route deployments:     
       //cacheEverything: true,
       //cacheKey: request.url.toString(),
-      cacheTtlByStatus: { "200-299": 0, 404: 1, "500-599": -1 }
+      //cacheTtlByStatus: { "200-299": 30, 404: 1, "500-599": -1 }
+      
     },
   };
   const proxyHeaders = ["Accept",
@@ -142,19 +156,25 @@ async function proxyRequest(url, request) {
                               "Accept-Ranges",
                               "Date",
                               "Last-Modified",
-                              "ETag"];
+                              "ETag",
+                              "CF-Cache-Status"];
       let responseInit = {status: response.status,
                           statusText: response.statusText,
-                          headers: { "Cache-Control": "public, max-age=5" }};
+                          headers: { "Cache-Control": "public, max-age=10" }};
       for (let name of responseHeaders) {
         let value = response.headers.get(name);
         if (value) {
           responseInit.headers[name] = value;
         }
+
       }
       const newResponse = new Response(response.body, responseInit);
+      let cacheStatus = newResponse.headers.get("CF-Cache-Status");
+      console.log('Proxy Image URL: ' + url)
+      console.log('CF-Cache-Status: ' + cacheStatus)
       return newResponse; 
     }
+    return response;
   } catch (e) {
     return new Response(e.message || e.toString(), { status: 500 })
   }
