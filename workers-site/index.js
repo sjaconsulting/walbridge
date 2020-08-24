@@ -7,7 +7,7 @@ import { getAssetFromKV, mapRequestToAsset } from '@cloudflare/kv-asset-handler'
  * 2. we will return an error message on exception in your Response rather
  *    than the default 404.html page.
  */
-const DEBUG = false
+const DEBUG = true
 
 addEventListener('fetch', event => {
   try {
@@ -101,7 +101,7 @@ function handlePrefix(prefix) {
 }
 
 /**
- * Based off Fast Google Fonts by @pmeenan
+ * Adapted from Fast Google Fonts by Patrick Meenan (@pmeenan)
  * Code: https://github.com/cloudflare/worker-examples/blob/master/examples/fast-google-fonts/fast-google-fonts.js
  * Blog post: https://blog.cloudflare.com/fast-google-fonts-with-cloudflare-workers/
  * Generate a new request based on the original. Filter the request
