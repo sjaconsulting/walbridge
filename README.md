@@ -2,6 +2,8 @@ Walbridge Fire Cams
 ====================
 A [Workers Sites](https://developers.cloudflare.com/workers/learning/getting-started) project for building the [Walbridge Fire Cams website](https://walbridge.sjaconsulting.workers.dev)
 
+[![Mt Jackson 2 - Live Webcam View](https://walbridge.sjaconsulting.workers.dev/api.nvseismolab.org/camera/Axis-Jackson2.jpg)](https://walbridge.sjaconsulting.workers.dev)
+
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button?paid=true)](https://deploy.workers.cloudflare.com/?url=https://github.com/sjaconsulting/walbridge&paid=true)
 
 This is a project for building a custom lightweight dashboard of views from third party webcam feeds from the [ALERTWildfire](http://www.alertwildfire.org/) network of PTZ cameras in order to monitor the Walbridge Fire and its vicinity. These particular camera feeds have been selected due to their proximity to this wildfire, which started on August 17th, 2020 after a rare lightning system struck the Bay Area and sparked the massive inferno, amongst others around the state of California. For up-to-the-minute local news coverage, please follow the [#WalbridgeFire hashtag from @Sarah_Stierch](https://twitter.com/search?q=(%23WalbridgeFire)%20(from%3ASarah_Stierch)&f=live) and [support your local independent journalists](https://venmo.com/SarahStierch).
